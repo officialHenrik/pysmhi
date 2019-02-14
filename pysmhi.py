@@ -1,14 +1,13 @@
-#! /usr/bin/python
-
+#!/usr/bin/env python3
 import requests
 import json
 
 class PySmhi:
-        
+
     # Get weather forecast
     def getWeatherForecast(self, lat, lng):
-  
-        output = []      
+
+        output = []
         # Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
         url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" % (lng, lat)
         r = requests.get(url)
@@ -36,7 +35,7 @@ class PySmhi:
         else:
             print("Url request failed: %s" % (r.status_code))
         return(output)
-        
+
     # Get weather
     def getWeather(self, nof, lat, lng):
         wf = self.getWeatherForecast(lat, lng)
