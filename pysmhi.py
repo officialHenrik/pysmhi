@@ -42,8 +42,9 @@ class PySmhi:
         wf = self.getWeatherForecast(lat, lng)
         return(wf[0:nof])
 
-ps = PySmhi()
-w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
-if w:
-    for fc in w:
-        print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(fc[0],fc[1],fc[2],fc[3]))
+if __name__ == "__main__":
+    ps = PySmhi()
+    w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
+    if w:
+        for fc in w:
+            print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(fc[0],fc[1],fc[2],fc[3]))
