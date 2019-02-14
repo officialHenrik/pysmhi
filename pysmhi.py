@@ -20,7 +20,7 @@ class PySmhi:
                 if not w or not "parameters" in w:
                     print("Error in response : %s" % (w))
                 else:
-                    temp = ws = rhum = 0
+                    temp = ws = wgs = rhum = 126
                     for p in w["parameters"]:
                         param = p["name"]
                         val   = p["values"][0]
@@ -28,11 +28,13 @@ class PySmhi:
                             temp = val
                         if param == "ws": # Wind speed
                             ws = val
+                        if param == "gust": # Wind gust speed
+                            wgs = val
                         if param == "r": # Relative humidity
                             rhum = val
-                    output.append([temp, ws, rhum])
+                    output.append([temp, ws, wgs, rhum])
         else:
-            print("Url request failed : %s" % (r.status_code))
+            print("Url request failed: %s" % (r.status_code))
         return(output)
         
     # Get weather
@@ -42,5 +44,6 @@ class PySmhi:
 
 ps = PySmhi()
 w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
-for forecast in w:
-    print("temp: {}C, wind: {}m/s, relHumid: {}%".format(forecast[0],forecast[1],forecast[2]))
+if w:
+    for fc in w:
+        print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(fc[0],fc[1],fc[2],fc[3]))
