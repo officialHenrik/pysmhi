@@ -4,38 +4,43 @@ import requests
 import json
 
 class PySmhi:
-            
-    def getWeather(self, lat, lng):
+        
+    # Get weather forecast
+    def getWeatherForecast(self, lat, lng):
+  
+        output = []      
+        # Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
         url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" % (lng, lat)
-
         r = requests.get(url)
 
-        output = [126, 126, 126] # default failure
-        nof_vals = 0
-
         if(r.status_code == 200): #OK
-            
             o = json.loads(r.text)
+            # iterate the forecast
             for w in o['timeSeries']:
-                nof_vals+=1
                 if not w or not "parameters" in w:
                     print("Error in response : %s" % (w))
                 else:
+                    temp = ws = rhum = 0
                     for p in w["parameters"]:
-                        if p["name"] == "t":
-                            temp = float(p["values"][0])
-                        if p["name"] == "ws":
-                            ws = float(p["values"][0])
-                        if p["name"] == "r":
-                            rhum = float(p["values"][0])
-                    output = [temp, ws, rhum]
-                
-                break;
+                        param = p["name"]
+                        val   = p["values"][0]
+                        if param == "t": # Temperature
+                            temp = val
+                        if param == "ws": # Wind speed
+                            ws = val
+                        if param == "r": # Relative humidity
+                            rhum = val
+                    output.append([temp, ws, rhum])
         else:
             print("Url request failed : %s" % (r.status_code))
         return(output)
- 
+        
+    # Get weather
+    def getWeather(self, nof, lat, lng):
+        wf = self.getWeatherForecast(lat, lng)
+        return(wf[0:nof])
+
 ps = PySmhi()
-w = ps.getWeather(55.348446, 13.360708) # in Smygehamn
- 
-print("temp: {}C, wind: {}m/s, relHumid: {}%".format(w[0],w[1],w[2]))
+w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
+for forecast in w:
+    print("temp: {}C, wind: {}m/s, relHumid: {}%".format(forecast[0],forecast[1],forecast[2]))
