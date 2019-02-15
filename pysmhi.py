@@ -2,18 +2,27 @@
 
 import requests
 
+# Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
 class PySmhi:
-    
+
     # Get weather forecast
     def getWeatherForecast(self, lat, lng):
         output = []
-        # Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
         url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" % (lng, lat)
-        r = requests.get(url)
+        try:
+            # Get forecast
+            r = requests.get(url)
+        except:
+            print("Url request failed")
+            return ([])
+        # Valid response?
+        if(not hasattr(r, 'status_code')):
+            print("URL return invalid response")
+            return([])
 
         if(r.status_code == 200): #OK
             jw = r.json()
-            # iterate the forecast hour by hour
+            # iterate the forecast hour by hour starting from now
             for fc_hour in jw['timeSeries']:
                 if not fc_hour or not "parameters" in fc_hour:
                     print("Error in response : %s" % (fc_hour))
@@ -41,5 +50,5 @@ if __name__ == "__main__":
     ps = PySmhi()
     w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
     if w:
-        for f in w:
+        for fc in w:
             print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(fc[0],fc[1],fc[2],fc[3]))
