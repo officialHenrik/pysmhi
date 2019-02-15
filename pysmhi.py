@@ -3,9 +3,9 @@
 import requests
 
 class PySmhi:
+    
     # Get weather forecast
     def getWeatherForecast(self, lat, lng):
-
         output = []
         # Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
         url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" % (lng, lat)
