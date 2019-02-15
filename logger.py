@@ -13,24 +13,19 @@ DBNAME = 'test'
 HOST = 'localhost'
 PORT = 8086
 
-
 ps = PySmhi()
 
 # ------------------------------------------------------
 # Callback for writing data to database
 def log_to_db():
     
-    points = []
     # get data
     ps = PySmhi()
     #w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
     w = ps.getWeather(1, 57.650989, 11.965847) # Get current weather in Eklanda
-    temp = w[0][0]
-    wind = w[0][1]
-    gust = w[0][2]
-    humi = w[0][3]
     
     # Insert into db
+    points = []
     point = {
         "measurement": 'Temp',
         "tags": {
@@ -38,10 +33,10 @@ def log_to_db():
             "sensor": "smhi", 
         },
         "fields": {
-             "temp": temp,
-             "wind": wind,
-             "gust": gust,
-             "humi": humi
+             "temp": w[0][0],
+             "wind": w[0][1],
+             "gust": w[0][2],
+             "humi": w[0][3]
                 }
             }
     points.append(point)
