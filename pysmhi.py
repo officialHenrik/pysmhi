@@ -51,4 +51,4 @@ if __name__ == "__main__":
     w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
     if w:
         for fc in w:
-            print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(fc[0],fc[1],fc[2],fc[3]))
+            print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(*fc))
