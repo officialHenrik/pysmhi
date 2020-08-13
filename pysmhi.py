@@ -2,17 +2,20 @@
 
 import requests
 
+
 # Get forecast according to https://opendata.smhi.se/apidocs/metfcst/index.html
 class PySmhi:
 
     # Get weather forecast
     def getWeatherForecast(self, lat, lng):
         output = []
-        url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" % (lng, lat)
+        url = "http://opendata-download-metfcst.smhi.se/api/category/" \
+            "pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" \
+            % (lng, lat)
         try:
             # Get forecast
             r = requests.get(url)
-        except:
+        except Exception:
             print("Url request failed")
             return ([])
         # Valid response?
@@ -20,21 +23,25 @@ class PySmhi:
             print("URL return invalid response")
             return([])
 
-        if(r.status_code == 200): #OK
+        if(r.status_code == 200):  # OK
             jw = r.json()
             # iterate the forecast hour by hour starting from now
             for fc_hour in jw['timeSeries']:
-                if not fc_hour or not "parameters" in fc_hour:
+                if not fc_hour or "parameters" not in fc_hour:
                     print("Error in response : %s" % (fc_hour))
                 else:
-                    temp = ws = wgs = rhum = 126 # default fail
+                    temp = ws = wgs = rhum = 126  # default fail
                     for p in fc_hour["parameters"]:
                         param = p["name"]
-                        val   = p["values"][0]
-                        if param == "t":      temp = val # temperature
-                        elif param == "ws":   ws = val   # Wind speed
-                        elif param == "gust": wgs = val  # Wind gust speed
-                        elif param == "r":    rhum = val # Relative humidity
+                        val = p["values"][0]
+                        if param == "t":
+                            temp = val  # temperature
+                        elif param == "ws":
+                            ws = val    # Wind speed
+                        elif param == "gust":
+                            wgs = val   # Wind gust speed
+                        elif param == "r":
+                            rhum = val  # Relative humidity
                     output.append([temp, ws, wgs, rhum])
         else:
             print("Url request failed: %s" % (r.status_code))
@@ -45,10 +52,12 @@ class PySmhi:
         wf = self.getWeatherForecast(lat, lng)
         return(wf[0:nof_hours])
 
+
 # --------------------------------------------------------
 if __name__ == "__main__":
     ps = PySmhi()
-    w = ps.getWeather(1, 55.348446, 13.360708) # Get current weather in Smygehamn
+    # Get current weather in Smygehamn
+    w = ps.getWeather(25, 55.348446, 13.360708)
     if w:
         for fc in w:
             print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(*fc))
