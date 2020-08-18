@@ -17,11 +17,11 @@ class PySmhi:
             r = requests.get(url)
         except Exception:
             print("Url request failed")
-            return ([])
+            return []
         # Valid response?
         if(not hasattr(r, 'status_code')):
             print("URL return invalid response")
-            return([])
+            return []
 
         if(r.status_code == 200):  # OK
             jw = r.json()
@@ -45,19 +45,19 @@ class PySmhi:
                     output.append([temp, ws, wgs, rhum])
         else:
             print("Url request failed: %s" % (r.status_code))
-        return(output)
+        return output
 
     # Get weather
     def getWeather(self, nof_hours, lat, lng):
         wf = self.getWeatherForecast(lat, lng)
-        return(wf[0:nof_hours])
+        return wf[0:nof_hours]
 
 
 # --------------------------------------------------------
 if __name__ == "__main__":
     ps = PySmhi()
     # Get current weather in Smygehamn
-    w = ps.getWeather(25, 55.348446, 13.360708)
+    w = ps.getWeather(24, 55.348446, 13.360708)
     if w:
-        for fc in w:
-            print("temp: {}C, wind: {}({})m/s, relHumid: {}%".format(*fc))
+        for idx, fc in enumerate(w):
+            print("{:2d}: temp: {:2.1f}C wind: {:2.1f} ({:2.1f})m/s relHumid: {:3d}%".format(idx, *fc))
