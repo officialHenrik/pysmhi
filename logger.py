@@ -16,19 +16,21 @@ PORT = 8086
 
 points = []
 
+
 # ------------------------------------------------------
+# Get current weather
 def get_point(where, lat, lng):
     current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     ps = PySmhi()
-    w = ps.getWeather(1, lat, lng) # Get current weather
+    w = ps.getWeather(1, lat, lng)  # Get current weather
     if w:
         point = {
             "measurement": 'Temp',
             "time": current_time,
             "tags": {
                 "location": where,
-                "sensor": "smhi", 
+                "sensor": "smhi",
             },
             "fields": {
                 "temp": w[0][0],
@@ -37,16 +39,17 @@ def get_point(where, lat, lng):
                 "humi": w[0][3]
                 }
             }
-    return(point)
+    return point
+
 
 # ------------------------------------------------------
 # Callback for writing data to database
 def log_to_db():
     global points
 
-    p1 = get_point("Smygehamn", 55.348446, 13.360708) # Get current weather
+    p1 = get_point("Smygehamn", 55.348446, 13.360708)  # Get current weather
     points.append(p1)
-    p2 = get_point("Eklanda", 57.650989, 11.965847) # Get current weather
+    p2 = get_point("Eklanda", 57.650989, 11.965847)  # Get current weather
     points.append(p2)
 
     try:
@@ -56,8 +59,9 @@ def log_to_db():
             points = []
         else:
             print("Warning: failed inserting into influxdb")
-    except:
+    except Exception:
         print("Influx connection failed")
+
 
 # ------------------------------------------------------
 # Schedule logging
@@ -68,8 +72,8 @@ try:
     schedule.run_all()
     while True:
         try:
-       	    schedule.run_pending()
-        except:
+            schedule.run_pending()
+        except Exception:
             print("pysmhi failed, continuing")
         time.sleep(1)
 finally:
