@@ -9,8 +9,7 @@ class PySmhi:
     # Get weather forecast
     def getWeatherForecast(self, lat, lng):
         output = []
-        url = "http://opendata-download-metfcst.smhi.se/api/category/" \
-            "pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" \
+        url = "http://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%s/lat/%s/data.json" \
             % (lng, lat)
         try:
             # Get forecast
