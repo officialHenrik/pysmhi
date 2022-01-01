@@ -86,7 +86,7 @@ class PySmhi:
 
     # Get weather string
     def getFcStr(self, fc):
-        return "temp: {:2.1f}C wind: {:2.1f} ({:2.1f})m/s relHumid: {:3d}%, weahter: {:s}".format(*fc)
+        return "temp: {:2.1f}C wind: {:2.1f} ({:2.1f})m/s relHumid: {:3.1f}%, weahter: {:s}".format(*fc)
 
 
 # --------------------------------------------------------
